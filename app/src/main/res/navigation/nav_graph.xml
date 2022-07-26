@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.cdimoiu.sliide.ui.SplashscreenFragment"
+        android:label="@string/splashscreen_fragment_label"
+        tools:layout="@layout/fragment_splashscreen">
+
+        <action
+            android:id="@+id/action_SplashscreenFragment_to_UsersListFragment"
+            app:destination="@id/SecondFragment"
+            app:popUpTo="@id/nav_graph" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="com.cdimoiu.sliide.ui.UsersListFragment"
+        android:label="@string/users_list_fragment_label"
+        tools:layout="@layout/fragment_users_list" />
+</navigation>
