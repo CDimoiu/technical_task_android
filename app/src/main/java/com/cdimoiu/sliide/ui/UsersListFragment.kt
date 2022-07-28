@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cdimoiu.sliide.R
@@ -95,11 +97,13 @@ class UsersListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.usersList.collect { resource ->
-                setUiElementsByStatus(resource.status)
-                resource.data?.let { users -> adapter.addUsers(users) }
-                showMessage(resource.message)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.usersList.collect { resource ->
+                    setUiElementsByStatus(resource.status)
+                    resource.data?.let { users -> adapter.addUsers(users) }
+                    showMessage(resource.message)
+                }
             }
         }
     }

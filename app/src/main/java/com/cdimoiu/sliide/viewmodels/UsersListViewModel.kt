@@ -30,7 +30,7 @@ class UsersListViewModel @Inject constructor(
         viewModelScope.launch {
             if (isNetworkAvailable()) {
                 try {
-                    _usersList.emit(Result.success(data = userDataRepository.getUsers()))
+                    _usersList.value = Result.success(data = userDataRepository.getUsers())
                 } catch (exception: Exception) {
                     emitError("Unable to retrieve the users list!")
                 }
@@ -43,11 +43,9 @@ class UsersListViewModel @Inject constructor(
             if (isNetworkAvailable()) {
                 try {
                     userDataRepository.removeUser(userId)
-                    _usersList.emit(
-                        Result.success(
-                            data = userDataRepository.getUsers(),
-                            message = "User removed successfully!"
-                        )
+                    _usersList.value = Result.success(
+                        data = userDataRepository.getUsers(),
+                        message = "User removed successfully!"
                     )
                 } catch (exception: Exception) {
                     emitError("Unable to remove the user!")
@@ -62,11 +60,9 @@ class UsersListViewModel @Inject constructor(
                 if (isValidUser(user)) {
                     try {
                         userDataRepository.addUser(user)
-                        _usersList.emit(
-                            Result.success(
-                                data = userDataRepository.getUsers(),
-                                message = "User added successfully!"
-                            )
+                        _usersList.value = Result.success(
+                            data = userDataRepository.getUsers(),
+                            message = "User added successfully!"
                         )
                     } catch (exception: Exception) {
                         emitError("Unable to add the user!")
@@ -76,7 +72,7 @@ class UsersListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun isValidUser(user: User): Boolean {
+    private fun isValidUser(user: User): Boolean {
         return when {
             user.id.isBlank() -> {
                 emitError("Please insert a valid user Id!")
@@ -94,14 +90,14 @@ class UsersListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun emitError(message: String? = null) {
-        _usersList.emit(Result.error(data = null, message = message))
+    private fun emitError(message: String? = null) {
+        _usersList.value = Result.error(data = null, message = message)
     }
 
-    private suspend fun isNetworkAvailable(): Boolean {
-        _usersList.emit(Result.loading(data = null))
+    private fun isNetworkAvailable(): Boolean {
+        _usersList.value = Result.loading(data = null)
         return if (!checkInternetConnection()) {
-            _usersList.emit(Result.error(data = null, message = "No internet connection!"))
+            _usersList.value = Result.error(data = null, message = "No internet connection!")
             false
         } else {
             true
